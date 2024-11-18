@@ -42,6 +42,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=development
+      - RABBITMQ_URL=amqp://rabbitmq
 
   warehouse:
     image: node:20
@@ -54,6 +55,13 @@ services:
       - "3001:3000"
     environment:
       - NODE_ENV=development
+      - RABBITMQ_URL=amqp://rabbitmq
 
   mongo:
     image: mongo:latest
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
