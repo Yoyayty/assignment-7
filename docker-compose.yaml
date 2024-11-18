@@ -43,6 +43,7 @@ services:
     environment:
       - NODE_ENV=development
       - RABBITMQ_URL=amqp://rabbitmq
+      - DB_NAME=books-service-db
 
   warehouse:
     image: node:20
@@ -56,9 +57,25 @@ services:
     environment:
       - NODE_ENV=development
       - RABBITMQ_URL=amqp://rabbitmq
+      - DB_NAME=warehouse-service-db
 
-  mongo:
-    image: mongo:latest
+  mongo-api:
+    image: mongo
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_DATABASE: books
+    volumes:
+      - mongo-api-data:/data/db
+
+  mongo-warehouse:
+    image: mongo
+    ports:
+      - "27019:27017"
+    environment:
+      MONGO_INITDB_DATABASE: warehouse
+    volumes:
+      - mongo-warehouse-data:/data/db
 
   rabbitmq:
     image: rabbitmq:management

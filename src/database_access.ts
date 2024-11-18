@@ -22,8 +22,9 @@ export interface AppBookDatabaseState {
   books: BookDatabaseAccessor
 }
 
-export function getBookDatabase (dbName?: string): BookDatabaseAccessor {
-  const database = client.db(dbName ?? Math.floor(Math.random() * 100000).toPrecision().toString())
+export function getBookDatabase(dbName?: string): BookDatabaseAccessor {
+  const databaseName = dbName ?? process.env.DB_NAME ?? 'books-service-db'
+  const database = client.db(databaseName)
   const books = database.collection<Book>('books')
 
   return {

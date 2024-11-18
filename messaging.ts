@@ -1,37 +1,30 @@
-import amqplib from 'amqplib'
+import amqp, { type Channel, type Connection } from 'amqplib'
 
-let connection: amqplib.Connection | null = null;
-let channel: amqplib.Channel | null = null;
+let channel: Channel
 
-export async function connectToRabbitMQ(rabbitmqUrl: string): Promise<void> {
-    try {
-        connection = await amqplib.connect(rabbitmqUrl);
-        channel = await connection.createChannel();
-        console.log('Connected to RabbitMQ');
-    } catch (err) {
-        console.error('Failed to connect to RabbitMQ:', err);
-    }
+export async function connectToMessageBroker(): Promise<void> {
+    const connection: Connection = await amqp.connect(process.env.RABBITMQ_URL || 'amqp://rabbitmq')
+    channel = await connection.createChannel()
+    console.log('Connected to RabbitMQ')
 }
 
 export async function publishMessage(queue: string, message: object): Promise<void> {
     if (!channel) {
-        throw new Error('RabbitMQ channel is not initialized');
+        throw new Error('Message broker not connected')
     }
-    await channel.assertQueue(queue, { durable: true });
-    channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
-    console.log(`Message published to queue ${queue}:`, message);
+    await channel.assertQueue(queue);
+    channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)))
 }
 
-export async function consumeMessages(queue: string, callback: (message: object) => void): Promise<void> {
+export async function consumeMessages(queue: string, handler: (msg: object) => void): Promise<void> {
     if (!channel) {
-        throw new Error('RabbitMQ channel is not initialized');
+        throw new Error('Message broker not connected')
     }
-    await channel.assertQueue(queue, { durable: true });
+    await channel.assertQueue(queue)
     channel.consume(queue, (msg) => {
-        if (msg) {
-            const content = JSON.parse(msg.content.toString());
-            callback(content);
-            channel!.ack(msg);
+        if (msg !== null) {
+            handler(JSON.parse(msg.content.toString()))
+            channel.ack(msg)
         }
     });
 }
