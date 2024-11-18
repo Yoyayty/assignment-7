@@ -1,0 +1,15 @@
+{
+    "name": "api",
+    "version": "1.0.0",
+    "main": "index.ts",
+    "scripts": {
+        "start": "npx tsx ./index.ts",
+        "generate:swagger": "npx tsoa spec-and-routes"
+    },
+    "dependencies": {
+        "koa": "^2.14.0",
+        "@koa/router": "^10.1.1",
+        "tsoa": "^4.0.0",
+        "mongodb": "^4.8.1"
+    }
+}

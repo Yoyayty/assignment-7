@@ -1,6 +1,6 @@
 import { BodyProp, Controller, Get, Path, Post, Put, Route, SuccessResponse, Request } from 'tsoa'
 import { getBookInfo } from './get_book_info'
-import { type ShelfId, type BookID, type OrderId, type FulfilledBooks, type OrderPlacement, type Order } from '../documented_types'
+import { type ShelfId, type BookID, type OrderId, type FulfilledBooks, type OrderPlacement, type Order } from '../src/documented_types'
 import { placeBooksOnShelf } from './place_on_shelf'
 import { fulfilOrder } from './fulfil_order'
 import { placeOrder } from './place_order'
@@ -17,9 +17,9 @@ export class WarehouseRoutes extends Controller {
      * @returns {BookInfo}
      */
   @Get('{book}')
-  public async getBookInfo (
+  public async getBookInfo(
     @Path() book: BookID,
-      @Request() request: KoaRequest
+    @Request() request: KoaRequest
   ): Promise<Record<string, number>> {
     const ctx: ParameterizedContext<AppWarehouseDatabaseState, DefaultContext> = request.ctx
     const data = ctx.state.warehouse
@@ -34,7 +34,7 @@ export class WarehouseRoutes extends Controller {
    */
   @Put('{book}/{shelf}/{number}')
   @SuccessResponse(201, 'Added')
-  public async placeBooksOnShelf (@Path() book: BookID, @Path() shelf: ShelfId, @Path() number: number,
+  public async placeBooksOnShelf(@Path() book: BookID, @Path() shelf: ShelfId, @Path() number: number,
     @Request() request: KoaRequest): Promise<void> {
     const ctx: ParameterizedContext<AppWarehouseDatabaseState, DefaultContext> = request.ctx
     this.setStatus(201)
@@ -51,10 +51,10 @@ export class FulfilOrderRoutes extends Controller {
      */
   @Put('{order}')
   @SuccessResponse(201, 'Fulfilled')
-  public async fulfilOrder (
+  public async fulfilOrder(
     @Path() order: OrderId,
-      @BodyProp('booksFulfilled') booksFulfilled: FulfilledBooks,
-      @Request() request: KoaRequest
+    @BodyProp('booksFulfilled') booksFulfilled: FulfilledBooks,
+    @Request() request: KoaRequest
   ): Promise<void> {
     const ctx: ParameterizedContext<AppWarehouseDatabaseState, DefaultContext> = request.ctx
     this.setStatus(201)
@@ -77,9 +77,9 @@ export class OrderRoutes extends Controller {
      */
   @Post()
   @SuccessResponse(201, 'created')
-  public async placeOrder (
+  public async placeOrder(
     @BodyProp('order') order: OrderPlacement,
-      @Request() request: KoaRequest
+    @Request() request: KoaRequest
   ): Promise<OrderId> {
     const ctx: ParameterizedContext<AppWarehouseDatabaseState, DefaultContext> = request.ctx
     this.setStatus(201)
@@ -97,7 +97,7 @@ export class OrderRoutes extends Controller {
    * @returns {Order[]}
    */
   @Get()
-  public async listOrders (
+  public async listOrders(
     @Request() request: KoaRequest): Promise<Order[]> {
     const ctx: ParameterizedContext<AppWarehouseDatabaseState, DefaultContext> = request.ctx
     return await listOrders(ctx.state.warehouse)

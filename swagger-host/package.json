@@ -1,0 +1,12 @@
+{
+    "name": "swagger-host",
+    "version": "1.0.0",
+    "main": "index.ts",
+    "scripts": {
+        "start": "npx tsx ./index.ts"
+    },
+    "dependencies": {
+        "koa": "^2.14.0",
+        "koa2-swagger-ui": "^5.0.0"
+    }
+}

@@ -10,7 +10,7 @@ services:
     image: ghcr.io/mcmastercce/bvd-103-mcmasterful-books/mcmasterful-books-docker:main
     volumes:
       - ./adapter:/source/adapter
-      
+
   server:
     image: node:20
     volumes:
@@ -24,13 +24,36 @@ services:
       - ./:/app
     command: npx -y tsx ./index.ts
     working_dir: /app
-    
+
   server3:
     image: node:20
     volumes:
       - ./:/app
     command: npx -y tsx ./index.ts
     working_dir: /app
+  api:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    command: npx tsx ./index.ts
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+
+  warehouse:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - ./warehouse:/app
+      - /app/node_modules
+    command: npx tsx ./index.ts
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=development
 
   mongo:
     image: mongo:latest

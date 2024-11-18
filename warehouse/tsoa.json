@@ -1,0 +1,13 @@
+{
+    "noImplicitAdditionalProperties": "silently-remove-extras",
+    "controllerPathGlobs": [
+        "./*.route.ts"
+    ],
+    "spec": {
+        "outputDirectory": "./build",
+        "basePath": "/warehouse"
+    },
+    "routes": {
+        "routesDir": "./build"
+    }
+}

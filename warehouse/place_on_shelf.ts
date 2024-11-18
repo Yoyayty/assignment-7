@@ -1,7 +1,7 @@
-import { type ShelfId, type BookID } from '../../adapter/assignment-4'
+import { type ShelfId, type BookID } from '../adapter/assignment-4'
 import { InMemoryWarehouse, type WarehouseData } from './warehouse_data'
 
-export async function placeBooksOnShelf (data: WarehouseData, bookId: BookID, numberOfBooks: number, shelf: ShelfId): Promise<void> {
+export async function placeBooksOnShelf(data: WarehouseData, bookId: BookID, numberOfBooks: number, shelf: ShelfId): Promise<void> {
   if (numberOfBooks < 0) {
     throw new Error("Can't place less than 0 books on a shelf")
   }
